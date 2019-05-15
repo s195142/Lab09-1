@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import it.polito.tdp.borders.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -31,8 +32,21 @@ public class BordersController {
 
 	@FXML
 	void doCalcolaConfini(ActionEvent event) {
-
-		txtResult.setText("Todo!");
+		String anno = txtAnno.getText();
+		if(anno!=null && !anno.isEmpty()) {
+			if(model.isDigit(anno)) {
+				if(model.annoValido(anno)) {
+					String risultato = model.calcolaConfini(anno);
+					txtResult.setText(risultato);
+				}else {
+					showMessage("Errore: inserire un anno dal 1816 al 2016.");
+				}
+			}else {
+				showMessage("Errore: formato anno non valido.");
+			}
+		}else {
+			showMessage("Errore: inserire un anno.");
+		}
 	}
 
 	@FXML // This method is called by the FXMLLoader when initialization is complete
@@ -40,4 +54,15 @@ public class BordersController {
 		assert txtAnno != null : "fx:id=\"txtAnno\" was not injected: check your FXML file 'Borders.fxml'.";
 		assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Borders.fxml'.";
 	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+	
+	private void showMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setContentText(message);
+		alert.show();		
+	}
+	
 }
